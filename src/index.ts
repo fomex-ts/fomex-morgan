@@ -47,7 +47,7 @@ type TokenCallbackFn = (
   arg?: string | number | boolean,
 ) => string | undefined;
 
-export class Morgan extends Plugin<{}, {}, Context_Web> {
+export class PluginMorgan extends Plugin<{}, {}, Context_Web> {
   constructor(format: 'combined' | 'common' | 'dev' | 'short' | 'tiny', options?: Options);
   constructor(format: FormatFn, options?: Options);
   constructor(format: string, options?: Options);
