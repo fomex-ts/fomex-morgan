@@ -47,7 +47,7 @@ type TokenCallbackFn = (
   arg?: string | number | boolean,
 ) => string | undefined;
 
-export class PluginMorgan extends Plugin<{}, {}, Context_Web> {
+export class PluginMorgan extends Plugin<Context_Web> {
   constructor(format: 'combined' | 'common' | 'dev' | 'short' | 'tiny', options?: Options);
   constructor(format: FormatFn, options?: Options);
   constructor(format: string, options?: Options);
@@ -57,7 +57,7 @@ export class PluginMorgan extends Plugin<{}, {}, Context_Web> {
 
     this.handle(async (ctx, next) => {
       await new Promise((resolve, reject) => {
-        // @ts-ignore
+        // @ts-expect-error
         fn(ctx.request.req, ctx.response.res, (err) => {
           err ? reject(err) : resolve(ctx);
         });
@@ -71,12 +71,12 @@ export class PluginMorgan extends Plugin<{}, {}, Context_Web> {
 export function morganFormat(name: string, fmt: FormatFn): void;
 export function morganFormat(name: string, fmt: string): void;
 export function morganFormat(name: string, fmt: string | FormatFn): void {
-  // @ts-ignore
+  // @ts-expect-error
   originalMorgan.format(name, fmt);
 }
 
 export function morganCompile(format: string): FormatFn {
-  // @ts-ignore
+  // @ts-expect-error
   return originalMorgan.compile(format);
 }
 
