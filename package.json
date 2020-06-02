@@ -1,6 +1,6 @@
 {
   "name": "fomex-morgan",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "repository": "git@github.com:fomex-ts/fomex-morgan.git",
   "author": "范文华 <531362022@qq.com>",
