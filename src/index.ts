@@ -55,7 +55,7 @@ export class PluginMorgan extends Plugin<Context_Web> {
     super();
     const fn = originalMorgan(format, options);
 
-    this.handle(async (ctx, next) => {
+    this.use(async (ctx, next) => {
       await new Promise((resolve, reject) => {
         // @ts-expect-error
         fn(ctx.request.req, ctx.response.res, (err) => {
