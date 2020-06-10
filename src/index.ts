@@ -1,5 +1,5 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { Plugin, Context_Web } from 'fomex';
+import { Plugin } from 'fomex';
 import originalMorgan from 'morgan';
 
 interface Options {
@@ -47,7 +47,7 @@ type TokenCallbackFn = (
   arg?: string | number | boolean,
 ) => string | undefined;
 
-export class PluginMorgan extends Plugin<Context_Web> {
+export class PluginMorgan extends Plugin<Plugin.Web> {
   constructor(format: 'combined' | 'common' | 'dev' | 'short' | 'tiny', options?: Options);
   constructor(format: FormatFn, options?: Options);
   constructor(format: string, options?: Options);
@@ -68,18 +68,24 @@ export class PluginMorgan extends Plugin<Context_Web> {
   }
 }
 
-export function morganFormat(name: string, fmt: FormatFn): void;
-export function morganFormat(name: string, fmt: string): void;
-export function morganFormat(name: string, fmt: string | FormatFn): void {
-  // @ts-expect-error
-  originalMorgan.format(name, fmt);
+class Morgan {
+  format(name: string, fmt: FormatFn): this;
+  format(name: string, fmt: string): this;
+  format(name: string, fmt: string | FormatFn): this {
+    // @ts-expect-error
+    originalMorgan.format(name, fmt);
+    return this;
+  }
+
+  compile(format: string): FormatFn {
+    // @ts-expect-error
+    return originalMorgan.compile(format);
+  }
+
+  token(name: string, callback: TokenCallbackFn): this {
+    originalMorgan.token(name, callback);
+    return this;
+  }
 }
 
-export function morganCompile(format: string): FormatFn {
-  // @ts-expect-error
-  return originalMorgan.compile(format);
-}
-
-export function morganToken(name: string, callback: TokenCallbackFn): void {
-  originalMorgan.token(name, callback);
-}
+export const morgan = new Morgan();

@@ -5,6 +5,9 @@
   "repository": "git@github.com:fomex-ts/fomex-morgan.git",
   "author": "范文华 <531362022@qq.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=10.13.0"
+  },
   "peerDependencies": {
     "fomex": ">=0.1.0"
   },
@@ -15,7 +18,7 @@
   "devDependencies": {
     "@types/morgan": "^1.9.0",
     "@types/node": "^14.0.11",
-    "fomex": "^0.0.45",
+    "fomex": "^0.0.56",
     "typescript": "^3.9.5"
   }
 }
