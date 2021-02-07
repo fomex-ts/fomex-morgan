@@ -1,63 +1,21 @@
 import { IncomingMessage, ServerResponse } from 'http';
-import { Plugin } from 'fomex';
+import { Slot } from 'qoq';
 import originalMorgan from 'morgan';
 
-interface Options {
-  /***
-   * Buffer duration before writing logs to the stream, defaults to false.
-   * When set to true, defaults to 1000 ms.
-   * @deprecated
-   */
-  buffer?: boolean;
+export type MorganOptions = originalMorgan.Options<IncomingMessage, ServerResponse>;
+export type FormatFn = originalMorgan.FormatFn<IncomingMessage, ServerResponse>;
+export type TokenCallbackFn = originalMorgan.TokenCallbackFn<IncomingMessage, ServerResponse>;
 
-  /***
-   * Write log line on request instead of response. This means that a
-   * requests will be logged even if the server crashes, but data from the
-   * response cannot be logged (like the response code).
-   */
-  immediate?: boolean;
-
-  /***
-   * Function to determine if logging is skipped, defaults to false. This
-   * function will be called as skip(req, res).
-   */
-  skip?(req: IncomingMessage, res: ServerResponse): boolean;
-
-  /***
-   * Output stream for writing log lines, defaults to process.stdout.
-   * @param str
-   */
-  stream?: {
-    /**
-     * Output stream for writing log lines.
-     */
-    write(str: string): void;
-  };
-}
-
-type FormatFn = (
-  tokens: Record<string, TokenCallbackFn>,
-  req: IncomingMessage,
-  res: ServerResponse,
-) => string | undefined | null;
-
-type TokenCallbackFn = (
-  req: IncomingMessage,
-  res: ServerResponse,
-  arg?: string | number | boolean,
-) => string | undefined;
-
-export class PluginMorgan extends Plugin<Plugin.Web> {
-  constructor(format: 'combined' | 'common' | 'dev' | 'short' | 'tiny', options?: Options);
-  constructor(format: FormatFn, options?: Options);
-  constructor(format: string, options?: Options);
+export class Morgan extends Slot<Slot.Web> {
+  constructor(format: 'combined' | 'common' | 'dev' | 'short' | 'tiny', options?: MorganOptions);
+  constructor(format: FormatFn, options?: MorganOptions);
+  constructor(format: string, options?: MorganOptions);
   constructor(format: any, options: any = {}) {
     super();
     const fn = originalMorgan(format, options);
 
     this.use(async (ctx, next) => {
       await new Promise((resolve, reject) => {
-        // @ts-expect-error
         fn(ctx.request.req, ctx.response.res, (err) => {
           err ? reject(err) : resolve(ctx);
         });
@@ -66,26 +24,21 @@ export class PluginMorgan extends Plugin<Plugin.Web> {
       return next();
     });
   }
-}
 
-class Morgan {
-  format(name: string, fmt: FormatFn): this;
-  format(name: string, fmt: string): this;
-  format(name: string, fmt: string | FormatFn): this {
+  static format(name: string, fmt: FormatFn): typeof Morgan;
+  static format(name: string, fmt: string): typeof Morgan;
+  static format(name: string, fmt: string | FormatFn): typeof Morgan {
     // @ts-expect-error
     originalMorgan.format(name, fmt);
-    return this;
+    return Morgan;
   }
 
-  compile(format: string): FormatFn {
-    // @ts-expect-error
+  static compile(format: string): FormatFn {
     return originalMorgan.compile(format);
   }
 
-  token(name: string, callback: TokenCallbackFn): this {
+  static token(name: string, callback: TokenCallbackFn): typeof Morgan {
     originalMorgan.token(name, callback);
-    return this;
+    return Morgan;
   }
 }
-
-export const morgan = new Morgan();

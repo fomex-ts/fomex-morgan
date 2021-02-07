@@ -1,20 +1,17 @@
-# Fomex Morgan
-Based on morgan
+# Morgan
+A logger middleware based on [morgan](https://github.com/expressjs/morgan) from express.
 
 # Installation
-
 ```bash
-yarn add fomex-morgan
+yarn add qoq-morgan
 ```
 
-# Using as a plugin
+# Using
 ```typescript
-import { Morgan } from 'fomex-morgan';
+import { Morgan } from 'qoq-morgan';
 
 baseWebRouter.global(new Morgan('combined'));
 ```
 
-
----------
-
-More usage detail see here: [express/morgan](https://github.com/expressjs/morgan)
+# Options
+@see [express/morgan](https://github.com/expressjs/morgan/blob/master/README.md)
