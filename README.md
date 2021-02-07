@@ -6,11 +6,12 @@ A logger middleware based on [morgan](https://github.com/expressjs/morgan) from 
 yarn add qoq-morgan
 ```
 
-# Using
+# Usage
 ```typescript
+import { WebSlotManager } from 'qoq';
 import { Morgan } from 'qoq-morgan';
 
-baseWebRouter.global(new Morgan('combined'));
+const webSlots = WebSlotManager.use(new Morgan('combined'));
 ```
 
 # Options
