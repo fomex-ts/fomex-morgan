@@ -10,7 +10,7 @@ export class Morgan extends Slot<Slot.Web> {
   constructor(format: 'combined' | 'common' | 'dev' | 'short' | 'tiny', options?: MorganOptions);
   constructor(format: FormatFn, options?: MorganOptions);
   constructor(format: string, options?: MorganOptions);
-  constructor(format: any, options: any = {}) {
+  constructor(format: any, options?: MorganOptions) {
     super();
     const fn = originalMorgan(format, options);
 
