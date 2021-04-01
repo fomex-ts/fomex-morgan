@@ -9,7 +9,11 @@ yarn add qoq-morgan
 # Usage
 ```typescript
 import { WebSlotManager } from 'qoq';
-import { Morgan } from 'qoq-morgan';
+import { Morgan, morgan } from 'qoq-morgan';
+
+// morgan.token(...)
+// morgan.format(...)
+// morgan.compile(...)
 
 const webSlots = WebSlotManager.use(new Morgan('combined'));
 ```

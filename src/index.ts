@@ -1,10 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { Slot } from 'qoq';
-import originalMorgan from 'morgan';
+import originalMorgan, { FormatFn, Options, TokenCallbackFn } from 'morgan';
 
-export type MorganOptions = originalMorgan.Options<IncomingMessage, ServerResponse>;
-export type FormatFn = originalMorgan.FormatFn<IncomingMessage, ServerResponse>;
-export type TokenCallbackFn = originalMorgan.TokenCallbackFn<IncomingMessage, ServerResponse>;
+type MorganOptions = Options<IncomingMessage, ServerResponse>;
 
 export class Morgan extends Slot<Slot.Web> {
   constructor(format: 'combined' | 'common' | 'dev' | 'short' | 'tiny', options?: MorganOptions);
@@ -24,21 +22,22 @@ export class Morgan extends Slot<Slot.Web> {
       return next();
     });
   }
-
-  static format(name: string, fmt: FormatFn): typeof Morgan;
-  static format(name: string, fmt: string): typeof Morgan;
-  static format(name: string, fmt: string | FormatFn): typeof Morgan {
-    // @ts-expect-error
-    originalMorgan.format(name, fmt);
-    return Morgan;
-  }
-
-  static compile(format: string): FormatFn {
-    return originalMorgan.compile(format);
-  }
-
-  static token(name: string, callback: TokenCallbackFn): typeof Morgan {
-    originalMorgan.token(name, callback);
-    return Morgan;
-  }
 }
+
+function token(name: string, callback: TokenCallbackFn<IncomingMessage, ServerResponse>) {
+  return originalMorgan.token(name, callback), morgan;
+}
+
+function format(name: string, fmt: string | FormatFn<IncomingMessage, ServerResponse>) {
+  return originalMorgan.format(name, fmt as string), morgan;
+}
+
+function compile(format: string): FormatFn<IncomingMessage, ServerResponse> {
+  return originalMorgan.compile(format);
+}
+
+export const morgan = {
+  token,
+  format,
+  compile,
+};
